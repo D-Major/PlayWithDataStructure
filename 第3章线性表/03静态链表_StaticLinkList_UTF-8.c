@@ -51,12 +51,12 @@ int Malloc_SSL(StaticLinkList space)
 	if (space[0]. cur)         
 	    space[0]. cur = space[i].cur;       /* 由于要拿出一个分量来使用了， */
 	                                        /* 所以我们就得把它的下一个 */
-	                                        /* 分量用来做备用 */
+	                                        /* 分量用来做备用, 顺延一个 */
 	return i;
 }
 
 
-/*  将下标为k的空闲结点回收到备用链表 */
+/*  将下标为k的空闲结点回收到备用链表, 相当于在第一个元素和第一个空闲元素之间插入了一个k元素 */
 void Free_SSL(StaticLinkList space, int k) 
 {  
     space[k].cur = space[0].cur;    /* 把第一个元素的cur值赋给要删除的分量cur */
@@ -90,7 +90,7 @@ Status ListInsert(StaticLinkList L, int i, ElemType e)
 		for(l = 1; l <= i - 1; l++)   /* 找到第i个元素之前的位置 */
 		   k = L[k].cur;           
 		L[j].cur = L[k].cur;    /* 把第i个元素之前的cur赋值给新元素的cur */
-		L[k].cur = j;           /* 把新元素的下标赋值给第i个元素之前元素的ur */
+		L[k].cur = j;           /* 把新元素的下标赋值给第i个元素之前元素的cur */
 		return OK;   
     }   
     return ERROR;   
@@ -105,7 +105,7 @@ Status ListDelete(StaticLinkList L, int i)
     k = MAXSIZE - 1;   
     for (j = 1; j <= i - 1; j++)   
         k = L[k].cur;   
-    j = L[k].cur;   
+    j = L[k].cur;   // j是第i个, k是第i-1个
     L[k].cur = L[j].cur;   
     Free_SSL(L, j);   
     return OK;   

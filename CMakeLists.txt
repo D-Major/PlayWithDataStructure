@@ -7,8 +7,8 @@ include_directories(.)
 
 add_executable(PlayWithDataStructureSourceCode_UTF_8
 #        第3章线性表/01线性表顺序存储_List_UTF-8.c
-        第3章线性表/02线性表链式存储_LinkList_UTF-8.c
-#        第3章线性表/03静态链表_StaticLinkList_UTF-8.c
+#        第3章线性表/02线性表链式存储_LinkList_UTF-8.c
+        第3章线性表/03静态链表_StaticLinkList_UTF-8.c
 #        第4章栈与队列/01顺序栈_Stack_UTF-8.c
 #        第4章栈与队列/02两栈共享空间_DoubleStack_UTF-8.c
 #        第4章栈与队列/03链栈_LinkStack_UTF-8.c

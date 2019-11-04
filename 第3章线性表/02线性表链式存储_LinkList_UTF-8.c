@@ -373,31 +373,30 @@ int main()
 //    }
 
 
-    k=ListLength(L); /* k为表长 */
-    for(j=k+1;j>=k;j--)
-    {
-            i=ListDelete_1(&L,j,&e); /* 删除第j个数据 */
-            if(i==ERROR)
-                    printf("删除第%d个数据失败\n",j);
-            else
-                    printf("删除第%d个的元素值为：%d\n",j,e);
-    }
-    printf("依次输出L的元素：");
-    ListTraverse(L);
-
-//    j=5;
-//    ListDelete(&L,j,&e); /* 删除第5个数据 */
-//    printf("删除第%d个的元素值为：%d\n",j,e);
-//
+//    k=ListLength(L); /* k为表长 */
+//    for(j=k+1;j>=k;j--)
+//    {
+//            i=ListDelete_1(&L,j,&e); /* 删除第j个数据 */
+//            if(i==ERROR)
+//                    printf("删除第%d个数据失败\n",j);
+//            else
+//                    printf("删除第%d个的元素值为：%d\n",j,e);
+//    }
 //    printf("依次输出L的元素：");
 //    ListTraverse(L);
 //
-//    i=ClearList(&L);
-//    printf("\n清空L后：ListLength(L)=%d\n",ListLength(L));
-//    CreateListHead(&L,20);
-//    printf("整体创建L的元素(头插法)：");
+//    j=5;
+//    ListDelete(&L,j,&e); /* 删除第5个数据 */
+//    printf("删除第%d个的元素值为：%d\n",j,e);
+//    printf("依次输出L的元素：");
 //    ListTraverse(L);
-//
+
+    i=ClearList(&L);
+    printf("\n清空L后：ListLength(L)=%d\n",ListLength(L));
+    CreateListHead(&L,20);
+    printf("整体创建L的元素(头插法)：");
+    ListTraverse(L);
+
 //    i=ClearList(&L);
 //    printf("\n删除L后：ListLength(L)=%d\n",ListLength(L));
 //    CreateListTail(&L,20);
