@@ -195,8 +195,10 @@ void CreateListHead(DuLinkList *L, int n)
     {
         p = (DuLinkList)malloc(sizeof(DuLNode)); /*  生成新结点 */
         p->data = rand()%100+1;             /*  随机生成100以内的数字 */
-        p->next = (*L)->next;
-        (*L)->next = p;						/*  插入到表头 */
+        p->prior = (*L);                    /*  插入到表头, 前驱 */
+        p->next = (*L)->next;               /*  后继 */
+        (*L)->next->prior = p;              /*  后继的前驱 */
+        (*L)->next = p;						/*  前驱的后继,一定要放在最后 */
     }
 }
 
@@ -207,14 +209,20 @@ void CreateListTail(DuLinkList *L, int n)
     int i;
     srand(time(0));                      /* 初始化随机数种子 */
     *L = (DuLinkList)malloc(sizeof(DuLNode)); /* L为整个线性表 */
+    (*L)->prior = (*L);                      /*  先建立一个带头结点的单链表 */
+    (*L)->next = (*L);
     r=*L;                                /* r为指向尾部的结点 */
     for (i=0; i<n; i++)
     {
         p = (DuLNode *)malloc(sizeof(DuLNode)); /*  生成新结点 */
-        p->data = rand()%100+1;           /*  随机生成100以内的数字 */
-        r->next=p;                        /* 将表尾终端结点的指针指向新结点 */
+        p->data = rand()%100+1;           /* 随机生成100以内的数字 */
+        p->prior = r;
+        p->next = r->next;
+        r->next->prior = p;
+        r->next = p;                        /* 将表尾终端结点的指针指向新结点 */
         r = p;                            /* 将当前的新结点定义为表尾终端结点 */
     }
+    (*L)->prior = r;
     r->next = *L;                       /* 表示当前链表结束 */
 }
 

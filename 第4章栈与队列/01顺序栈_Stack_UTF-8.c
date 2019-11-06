@@ -81,7 +81,7 @@ Status Push(SqStack *S,SElemType e)
 /* 若栈不空，则删除S的栈顶元素，用e返回其值，并返回OK；否则返回ERROR */
 Status Pop(SqStack *S,SElemType *e)
 { 
-        if(S->top==-1)
+        if(S->top==-1)  // 主要是栈满和栈空的判断, 顺序栈本身只是个数组(S->data)
                 return ERROR;
         *e=S->data[S->top];	/* 将要删除的栈顶元素赋值给e */
         S->top--;				/* 栈顶指针减一 */
@@ -93,7 +93,7 @@ Status StackTraverse(SqStack S)
 {
         int i;
         i=0;
-        while(i<=S.top)
+        while(i<=S.top)         // 栈指针从0开始算, -1代表空栈
         {
                 visit(S.data[i++]);
         }
