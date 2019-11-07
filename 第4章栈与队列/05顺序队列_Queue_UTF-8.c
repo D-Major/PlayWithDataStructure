@@ -73,7 +73,7 @@ Status EnQueue(SqQueue *Q,QElemType e)
 		return ERROR;
 	Q->data[Q->rear]=e;			/* 将元素e赋值给队尾 */
 	Q->rear=(Q->rear+1)%MAXSIZE;/* rear指针向后移一位置， */
-								/* 若到最后则转到数组头部 */
+								/* 若到最后则转到数组头部(队列的判断都是要对MAXSIZE取模) */
 	return  OK;
 }
 
@@ -92,11 +92,11 @@ Status DeQueue(SqQueue *Q,QElemType *e)
 Status QueueTraverse(SqQueue Q)
 { 
 	int i;
-	i=Q.front;
+	i=Q.front;  // 初始不一定为0, 只是头指针的位置, 所以要注意超过数组尾端的情况
 	while((i+Q.front)!=Q.rear)
 	{
 		visit(Q.data[i]);
-		i=(i+1)%MAXSIZE;
+		i=(i+1)%MAXSIZE;    // TODO: 为什么?
 	}
 	printf("\n");
 	return OK;
@@ -114,14 +114,14 @@ int main()
 	printf("请输入整型队列元素(不超过%d个),-1为提前结束符: ",MAXSIZE-1);
 	do
 	{
-		/* scanf("%d",&d); */
-		d=i+100;
+		scanf("%d",&d);
+//		d=i+100;
 		if(d==-1)
 			break;
 		i++;
 		EnQueue(&Q,d);
 	}while(i<MAXSIZE-1);
-
+	QueueTraverse(Q);
 	printf("队列长度为: %d\n",QueueLength(Q));
 	printf("现在队列空否？%u(1:空 0:否)\n",QueueEmpty(Q));
 	printf("连续%d次由队头删除元素,队尾插入元素:\n",MAXSIZE);

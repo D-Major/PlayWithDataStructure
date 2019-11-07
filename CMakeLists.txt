@@ -13,9 +13,9 @@ add_executable(PlayWithDataStructureSourceCode_UTF_8
 #        第3章线性表/05双向循环链表_DuLinkList.c
 #        第4章栈与队列/01顺序栈_Stack_UTF-8.c
 #        第4章栈与队列/02两栈共享空间_DoubleStack_UTF-8.c
-        第4章栈与队列/03链栈_LinkStack_UTF-8.c
+#        第4章栈与队列/03链栈_LinkStack_UTF-8.c
 #        第4章栈与队列/04斐波那契函数_Fibonacci_UTF-8.c
-#        第4章栈与队列/05顺序队列_Queue_UTF-8.c
+        第4章栈与队列/05顺序队列_Queue_UTF-8.c
 #        第4章栈与队列/06链队列_LinkQueue_UTF-8.c
 #        第5章串/01串_String_UTF-8.c
 #        第5章串/02模式匹配_KMP_UTF-8.c

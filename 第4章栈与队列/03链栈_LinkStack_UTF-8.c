@@ -72,7 +72,7 @@ Status StackEmpty(LinkStack S)
 /* 返回S的元素个数，即栈的长度 */
 int StackLength(LinkStack S)
 { 
-        return S.count;         // TODO: 这里S.和S->的区别是什么
+        return S.count;         // TODO: 这里S.和S->的区别是什么? .结构体变量, ->结构体指针?
 }
 
 /* 若栈不空，则用e返回S的栈顶元素，并返回OK；否则返回ERROR */
@@ -105,7 +105,7 @@ Status Pop(LinkStack *S,SElemType *e)
         *e=S->top->data;
         p=S->top;					/* 将栈顶结点赋值给p，见图中③ */
         S->top=S->top->next;    /* 使得栈顶指针下移一位，指向后一结点，见图中④ */
-        free(p);                    /* 释放结点p */        
+        free(p);                    /* 释放结点p */
         S->count--;
         return OK;
 }

@@ -2,9 +2,9 @@
 
 int Fbi(int i)  /* 斐波那契的递归函数 */
 {
-	if( i < 2 )
+	if( i < 2 )		// 一定要有递归结束条件
 		return i == 0 ? 0 : 1;  
-    return Fbi(i - 1) + Fbi(i - 2);  /* 这里Fbi就是函数自己，等于在调用自己 */
+    return Fbi(i - 1) + Fbi(i - 2);  /* 这里Fbi就是函数自己，等于在调用自己, 也可以看做是在调用一个同名函数 */
 }  
 
 int main()
