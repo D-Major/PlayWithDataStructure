@@ -93,10 +93,10 @@ Status QueueTraverse(SqQueue Q)
 { 
 	int i;
 	i=Q.front;  // 初始不一定为0, 只是头指针的位置, 所以要注意超过数组尾端的情况
-	while((i+Q.front)!=Q.rear)
+	while( i%MAXSIZE != Q.rear)		// Q.rear==最后一个元素下标+1, 要空一格位置
 	{
 		visit(Q.data[i]);
-		i=(i+1)%MAXSIZE;    // TODO: 为什么?
+		i=(i+1)%MAXSIZE;    // 数组指针越界就返回到开头
 	}
 	printf("\n");
 	return OK;
@@ -114,41 +114,47 @@ int main()
 	printf("请输入整型队列元素(不超过%d个),-1为提前结束符: ",MAXSIZE-1);
 	do
 	{
-		scanf("%d",&d);
-//		d=i+100;
+//		scanf("%d",&d);  // 手动输入队列元素
+		d=i+100;
 		if(d==-1)
 			break;
 		i++;
 		EnQueue(&Q,d);
-	}while(i<MAXSIZE-1);
+	}while(i<MAXSIZE-1);	// 要空一格位置, 不能全填满, 不过即使往里填也填不进去, 因为队列指针还会判断一次是否已满
 	QueueTraverse(Q);
 	printf("队列长度为: %d\n",QueueLength(Q));
 	printf("现在队列空否？%u(1:空 0:否)\n",QueueEmpty(Q));
 	printf("连续%d次由队头删除元素,队尾插入元素:\n",MAXSIZE);
-	for(l=1;l<=MAXSIZE;l++)
+	for(l=0;l<MAXSIZE;l++)
 	{
-		DeQueue(&Q,&d);
-		printf("删除的元素是%d,插入的元素:%d \n",d,l+1000);
-		/* scanf("%d",&d); */
-		d=l+1000;
+		DeQueue(&Q,&d);		// 出队列入队列只是修改指针, 数组中的值不变, 新的值传入时被覆盖
+//		printf("删除的元素是%d,插入的元素:%d \n",d,l+999);
+		/* scanf("%d",&d); */  // 手动输入新元素
+		d=l+999;
 		EnQueue(&Q,d);
+//		printf("头指针:%d, 尾指针:%d \n", Q.front, Q.rear);
 	}
 	l=QueueLength(Q);
 
 	printf("现在队列中的元素为: \n");
 	QueueTraverse(Q);
-	printf("共向队尾插入了%d个元素\n",i+MAXSIZE);
-	if(l-2>0)
-		printf("现在由队头删除%d个元素:\n",l-2);
-	while(QueueLength(Q)>2)
+	printf("共向队尾插入了%d个元素\n", MAXSIZE);
+	if(l-3>0)
+		printf("现在由队头删除%d个元素:\n",l-3);
+	while(QueueLength(Q)>3)
 	{
 		DeQueue(&Q,&d);
-		printf("删除的元素值为%d\n",d);
+//		printf("删除的元素值为%d\n",d);
+//		printf("头指针:%d, 尾指针:%d \n", Q.front, Q.rear);
 	}
 
 	j=GetHead(Q,&d);
 	if(j)
 		printf("现在队头元素为: %d\n",d);
+	EnQueue(&Q, 1019);
+	EnQueue(&Q, 1020);
+	QueueTraverse(Q);
+
 	ClearQueue(&Q);
 	printf("清空队列后, 队列空否？%u(1:空 0:否)\n",QueueEmpty(Q));
 	return 0;
