@@ -18,16 +18,16 @@ typedef int ElemType;	/* ElemType类型根据实际情况而定，这里假设�
 typedef char String[MAXSIZE+1]; /*  0号单元存放串的长度 */
 
 /* 生成一个其值等于chars的串T */
-Status StrAssign(String T,char *chars)
+Status StrAssign(String T,char *chars)	// 这里传入的*chars是字符串的首地址, 只指向第一个字母
 { 
 	int i;
 	if(strlen(chars)>MAXSIZE)
 		return ERROR;
 	else
 	{
-		T[0]=strlen(chars);
+		T[0]=strlen(chars);		// 将字符串长度放在首位
 		for(i=1;i<=T[0];i++)
-			T[i]=*(chars+i-1);
+			T[i] = *(chars+i-1);		// 首位地址加偏移得到其他的字母, 不是按ASCII码的顺序, 输入的是首字母指针
 		return OK;
 	}
 }
@@ -80,11 +80,11 @@ Status Concat(String T,String S1,String S2)
 	int i;
 	if(S1[0]+S2[0]<=MAXSIZE)
 	{ /*  未截断 */
+		T[0]=S1[0]+S2[0];
 		for(i=1;i<=S1[0];i++)
 			T[i]=S1[i];
 		for(i=1;i<=S2[0];i++)
 			T[S1[0]+i]=S2[i];
-		T[0]=S1[0]+S2[0];
 		return TRUE;
 	}
 	else
@@ -102,10 +102,10 @@ Status Concat(String T,String S1,String S2)
 Status SubString(String Sub,String S,int pos,int len)
 {
 	int i;
-	if(pos<1||pos>S[0]||len<0||len>S[0]-pos+1)
+	if(pos<1||pos>S[0]||len<0||len>S[0]-pos+1)	// S[0]+1是数组总长度, 与pos作差得到最长的子串长度
 		return ERROR;
 	for(i=1;i<=len;i++)
-		Sub[i]=S[pos+i-1];
+		Sub[i]=S[pos+i-1];	// 包含pos处的值
 	Sub[0]=len;
 	return OK;
 }
@@ -195,7 +195,7 @@ Status StrDelete(String S,int pos,int len)
 	if(pos<1||pos>S[0]-len+1||len<0)
 		return ERROR;
 	for(i=pos+len;i<=S[0];i++)
-		S[i-len]=S[i];
+		S[i-len]=S[i];	// 将后面的往前挪
 	S[0]-=len;
 	return OK;
 }
@@ -235,11 +235,10 @@ int main()
 	
 	int i,j;
 	Status k;
-	char s;
+	char eq;
 	String t,s1,s2;
 	printf("请输入串s1: ");
-	
-	k=StrAssign(s1,"abcd");
+	k=StrAssign(s1,"abc");	// 对初始的字符串进行赋值
 	if(!k)
 	{
 		printf("串长超过MAXSIZE(=%d)\n",MAXSIZE);
@@ -251,7 +250,7 @@ int main()
 	StrPrint(s2);
 	printf("请输入串s2: ");
 	
-	k=StrAssign(s2,"efghijk");
+	k=StrAssign(s2,"defg");
 	if(!k)
 	{
 		printf("串长超过MAXSIZE(%d)\n",MAXSIZE);
@@ -259,12 +258,12 @@ int main()
 	}
 	i=StrCompare(s1,s2);
 	if(i<0)
-		s='<';
+		eq='<';
 	else if(i==0)
-		s='=';
+		eq='=';
 	else
-		s='>';
-	printf("串s1%c串s2\n",s);
+		eq='>';
+	printf("串s1%c串s2\n",eq);
 	k=Concat(t,s1,s2);
 	printf("串s1联接串s2得到的串t为: ");
 	StrPrint(t);
@@ -274,11 +273,11 @@ int main()
 	printf("清为空串后,串s1为: ");
 	StrPrint(s1);
 	printf("串长为%d 串空否？%d(1:是 0:否)\n",StrLength(s1),StrEmpty(s1));
-	printf("求串t的子串,请输入子串的起始位置,子串长度: ");
 
+//	scanf("求串t的子串,请输入子串的起始位置:%d,子串长度:%d", i, j);
 	i=2;
 	j=3;
-	printf("%d,%d \n",i,j);
+	printf("求串t的子串,子串的起始位置:%d,子串长度:%d\n", i, j);
 
 	k=SubString(s2,t,i,j);
 	if(k)
@@ -286,28 +285,30 @@ int main()
 		printf("子串s2为: ");
 		StrPrint(s2);
 	}
-	printf("从串t的第pos个字符起,删除len个字符，请输入pos,len: ");
-	
+
+//	printf("从串t的第pos个字符起,删除len个字符，请输入pos,len: ");
 	i=4;
 	j=2;
-	printf("%d,%d \n",i,j);
-
-
+	printf("从串t的第pos个字符起,删除len个字符，请输入pos,len: %d,%d\n",i, j);
 	StrDelete(t,i,j);
 	printf("删除后的串t为: ");
 	StrPrint(t);
+
 	i=StrLength(s2)/2;
 	StrInsert(s2,i,t);
 	printf("在串s2的第%d个字符之前插入串t后,串s2为:\n",i);
 	StrPrint(s2);
+
 	i=Index(s2,t,1);
 	printf("s2的第%d个字母起和t第一次匹配\n",i);
 	SubString(t,s2,1,1);
 	printf("串t为：");
 	StrPrint(t);
+
 	Concat(s1,t,t);
 	printf("串s1为：");
 	StrPrint(s1);
+
 	Replace(s2,t,s1);
 	printf("用串s1取代串s2中和串t相同的不重叠的串后,串s2为: ");
 	StrPrint(s2);
