@@ -110,7 +110,8 @@ Status SubString(String Sub,String S,int pos,int len)
 	return OK;
 }
 
-/* 返回子串T在主串S中第pos个字符之后的位置。若不存在,则函数返回值为0。 */
+/* 朴素模式匹配(纯数组实现)
+ * 返回子串T在主串S中第pos个字符之后的位置。若不存在,则函数返回值为0。 */
 /* 其中,T非空,1≤pos≤StrLength(S)。 */
 int Index(String S, String T, int pos) 
 {
@@ -136,8 +137,9 @@ int Index(String S, String T, int pos)
 }
 
 
-/*  T为非空串。若主串S中第pos个字符之后存在与T相等的子串， */
-/*  则返回第一个这样的子串在S中的位置，否则返回0 */
+/* 朴素模式匹配
+ * T为非空串。若主串S中第pos个字符之后存在与T相等的子串，
+ * 则返回第一个这样的子串在S中的位置，否则返回0 */
 int Index2(String S, String T, int pos) 
 {
 	int n,m,i;
@@ -147,10 +149,10 @@ int Index2(String S, String T, int pos)
 		n = StrLength(S);	/* 得到主串S的长度 */
 		m = StrLength(T);	/* 得到子串T的长度 */
 		i = pos;
-		while (i <= n-m+1) 
+		while (i <= n-m+1) 	// 终止条件为T的尾部与S的尾部重合时还没找到
 		{
-			SubString (sub, S, i, m);	/* 取主串中第i个位置长度与T相等的子串给sub */
-			if (StrCompare(sub,T) != 0)    /* 如果两串不相等 */
+			SubString (sub, S, i, m);	/* 每次取主串第i个位置处T长度的子串给sub */
+			if (StrCompare(sub,T) != 0)    /* 如果两串不相等, 向前取下一个位置 */
 				++i;
 			else 				/* 如果两串相等 */
 				return i;		/* 则返回i值 */
@@ -165,23 +167,27 @@ int Index2(String S, String T, int pos)
 Status StrInsert(String S,int pos,String T)
 { 
 	int i;
-	if(pos<1||pos>S[0]+1)
+	if(pos<1||pos>S[0]+1)	// 当pos==S[0]+1时, T插入到S末尾
 		return ERROR;
 	if(S[0]+T[0]<=MAXSIZE)
 	{ /*  完全插入 */
 		for(i=S[0];i>=pos;i--)
-			S[i+T[0]]=S[i];
+			S[i+T[0]]=S[i];		// 先将原来位置处的后移
 		for(i=pos;i<pos+T[0];i++)
-			S[i]=T[i-pos+1];
+			S[i]=T[i-pos+1];	// 逐个将T的复制过来
 		S[0]=S[0]+T[0];
 		return TRUE;
 	}
 	else
 	{ /*  部分插入 */
-		for(i=MAXSIZE;i<=pos;i--)
-			S[i]=S[i-T[0]];
+		/* 设MAXSIZE=10, S=[7abcdefg###], T=[6lmnopq####], pos=4
+		 * i=10: S[10]=S[4], S=[7abcdefg##d]; i=9: S[9]=S[3], S=[7abcdefg#cd];
+		 * 一直到i=6, S[6]=S[0], S=[7abcde7abcd], 再之后会访问数组负数下标报错
+		 */
+		for(i=MAXSIZE;i>=pos&&i>=T[0];i--)
+			S[i]=S[i-T[0]];		// 从S的末尾开始向前, 复制前面留出pos位置后剩下的部分, 超出的舍弃
 		for(i=pos;i<pos+T[0];i++)
-			S[i]=T[i-pos+1];
+			S[i]=T[i-pos+1];	// S=[7abclmnopgd]
 		S[0]=MAXSIZE;
 		return FALSE;
 	}
@@ -195,7 +201,7 @@ Status StrDelete(String S,int pos,int len)
 	if(pos<1||pos>S[0]-len+1||len<0)
 		return ERROR;
 	for(i=pos+len;i<=S[0];i++)
-		S[i-len]=S[i];	// 将后面的往前挪
+		S[i-len]=S[i];	// 将后面的往前挪, 覆盖原来的
 	S[0]-=len;
 	return OK;
 }
@@ -274,11 +280,11 @@ int main()
 	StrPrint(s1);
 	printf("串长为%d 串空否？%d(1:是 0:否)\n",StrLength(s1),StrEmpty(s1));
 
+	printf("%s\n", "=================");
 //	scanf("求串t的子串,请输入子串的起始位置:%d,子串长度:%d", i, j);
 	i=2;
 	j=3;
-	printf("求串t的子串,子串的起始位置:%d,子串长度:%d\n", i, j);
-
+	printf("求串t的子串,子串的起始位置:%d,子串长度:%d -> ", i, j);
 	k=SubString(s2,t,i,j);
 	if(k)
 	{
@@ -289,30 +295,31 @@ int main()
 //	printf("从串t的第pos个字符起,删除len个字符，请输入pos,len: ");
 	i=4;
 	j=2;
-	printf("从串t的第pos个字符起,删除len个字符，请输入pos,len: %d,%d\n",i, j);
+	printf("从串t的第pos个字符起,删除len个字符，请输入pos,len: %d,%d -> ",i, j);
 	StrDelete(t,i,j);
 	printf("删除后的串t为: ");
 	StrPrint(t);
 
-	i=StrLength(s2)/2;
+	i=3;    // StrLength(s2)/2;
 	StrInsert(s2,i,t);
-	printf("在串s2的第%d个字符之前插入串t后,串s2为:\n",i);
+	printf("在串s2的第%d个字符之前插入串t后,串s2为:",i);
 	StrPrint(s2);
 
-	i=Index(s2,t,1);
-	printf("s2的第%d个字母起和t第一次匹配\n",i);
-	SubString(t,s2,1,1);
-	printf("串t为：");
+	i=Index(s2,t,1);	// 朴素的模式匹配
+	printf("朴素模式匹配: s2的第%d个字母起和t第一次匹配\n",i);
+
+	printf("%s\n", "=======替换=======");
+	printf("串s2为: ");
+	StrPrint(s2);
+	printf("令串t为：");
+	SubString(t,s2,1,1);	// 令t为s2首字母
 	StrPrint(t);
-
-	Concat(s1,t,t);
-	printf("串s1为：");
+	printf("令串s1为：");
+	Concat(s1,t,t);		// 令s1为两个t拼接起来的
 	StrPrint(s1);
-
 	Replace(s2,t,s1);
-	printf("用串s1取代串s2中和串t相同的不重叠的串后,串s2为: ");
+	printf("用串s1, 替换串s2中和串t相同且不重叠的部分后, 串s2为: ");
 	StrPrint(s2);
-
 
 	return 0;
 }
