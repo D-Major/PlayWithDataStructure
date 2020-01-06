@@ -75,7 +75,7 @@ int Index(String S, String T, int pos)
       	} 
       	else 				/* 指针后退重新开始匹配 */
       	{  
-         	i = i-j+2;		/* i退回到上次匹配首位的下一位 */
+         	i = i-j+2;		/* i退回到上次匹配首位的下一位, 受首位是长度的影响+2 */
          	j = 1; 			/* j退回到子串T的首位 */
       	}      
 	}
@@ -88,20 +88,17 @@ int Index(String S, String T, int pos)
 /* 通过计算返回子串T的next数组。 */
 void get_next(String T, int *next) 
 {
-	int i,j;
-  	i=1;
-  	j=0;
-  	next[1]=0;
+	int i = 1,j = 0;
+  	next[1]=0;	// next[0]不赋值, 使用初始化的随机值
   	while (i<T[0])  /* 此处T[0]表示串T的长度 */
  	{
     	if(j==0 || T[i]== T[j]) 	/* T[i]表示后缀的单个字符，T[j]表示前缀的单个字符 */
-		{
-      		++i;  
-			++j;  
-			next[i] = j;
-    	} 
-		else 
-			j= next[j];	/* 若字符不相同，则j值回溯 */
+    		// 如果一直相同, 则next[j+1]的最大值为next[j]+1
+			next[++i] = ++j;	// 一开始j==0时, 顺便设next[2]=1, 前两位01是固定的
+		else
+			// 如果不相同, next[j+1]可能的次大值为next[next[j]]+1，以此类推即可高效求出next[j+1]
+			// j的值不断的回溯, 得到当前处的首尾相同数量时才会加1赋给next数组中对应的i处
+			j= next[j];	/* 若字符不相同，则j值回溯到0 */
   	}
 }
 
@@ -180,15 +177,15 @@ int main()
 	int i,*p;
 	String s1,s2;
 	
-	StrAssign(s1,"abcdex");
-	printf("子串为: ");
-	StrPrint(s1);
-	i=StrLength(s1);
-	p=(int*)malloc((i+1)*sizeof(int));
-	get_next(s1,p); 
-	printf("Next为: ");
-	NextPrint(p,StrLength(s1));
-	printf("\n");
+//	StrAssign(s1,"abcdex");
+//	printf("子串为: ");
+//	StrPrint(s1);
+//	i=StrLength(s1);
+//	p=(int*)malloc((i+1)*sizeof(int));
+//	get_next(s1,p);
+//	printf("Next为: ");
+//	NextPrint(p,StrLength(s1));
+//	printf("\n");
 
 	StrAssign(s1,"abcabx");
 	printf("子串为: ");
@@ -199,64 +196,64 @@ int main()
 	printf("Next为: ");
 	NextPrint(p,StrLength(s1));
 	printf("\n");
-
-	StrAssign(s1,"ababaaaba");
-	printf("子串为: ");
-	StrPrint(s1);
-	i=StrLength(s1);
-	p=(int*)malloc((i+1)*sizeof(int));
-	get_next(s1,p); 
-	printf("Next为: ");
-	NextPrint(p,StrLength(s1));
-	printf("\n");
-
-	StrAssign(s1,"aaaaaaaab");
-	printf("子串为: ");
-	StrPrint(s1);
-	i=StrLength(s1);
-	p=(int*)malloc((i+1)*sizeof(int));
-	get_next(s1,p); 
-	printf("Next为: ");
-	NextPrint(p,StrLength(s1));
-	printf("\n");
-
-	StrAssign(s1,"ababaaaba");
-	printf("   子串为: ");
-	StrPrint(s1);
-	i=StrLength(s1);
-	p=(int*)malloc((i+1)*sizeof(int));
-	get_next(s1,p); 
-	printf("   Next为: ");
-	NextPrint(p,StrLength(s1));
-	get_nextval(s1,p); 
-	printf("NextVal为: ");
-	NextPrint(p,StrLength(s1));
-	printf("\n");
-
-	StrAssign(s1,"aaaaaaaab");
-	printf("   子串为: ");
-	StrPrint(s1);
-	i=StrLength(s1);
-	p=(int*)malloc((i+1)*sizeof(int));
-	get_next(s1,p); 
-	printf("   Next为: ");
-	NextPrint(p,StrLength(s1));
-	get_nextval(s1,p); 
-	printf("NextVal为: ");
-	NextPrint(p,StrLength(s1));
-
-	printf("\n");
-
-	StrAssign(s1,"00000000000000000000000000000000000000000000000001");
-	printf("主串为: ");
-	StrPrint(s1);
-	StrAssign(s2,"0000000001");
-	printf("子串为: ");
-	StrPrint(s2);
-	printf("\n");
-	printf("主串和子串在第%d个字符处首次匹配（朴素模式匹配算法）\n",Index(s1,s2,1));
-	printf("主串和子串在第%d个字符处首次匹配（KMP算法） \n",Index_KMP(s1,s2,1));
-	printf("主串和子串在第%d个字符处首次匹配（KMP改良算法） \n",Index_KMP1(s1,s2,1));
+//
+//	StrAssign(s1,"ababaaaba");
+//	printf("子串为: ");
+//	StrPrint(s1);
+//	i=StrLength(s1);
+//	p=(int*)malloc((i+1)*sizeof(int));
+//	get_next(s1,p);
+//	printf("Next为: ");
+//	NextPrint(p,StrLength(s1));
+//	printf("\n");
+//
+//	StrAssign(s1,"aaaaaaaab");
+//	printf("子串为: ");
+//	StrPrint(s1);
+//	i=StrLength(s1);
+//	p=(int*)malloc((i+1)*sizeof(int));
+//	get_next(s1,p);
+//	printf("Next为: ");
+//	NextPrint(p,StrLength(s1));
+//	printf("\n");
+//
+//	StrAssign(s1,"ababaaaba");
+//	printf("   子串为: ");
+//	StrPrint(s1);
+//	i=StrLength(s1);
+//	p=(int*)malloc((i+1)*sizeof(int));
+//	get_next(s1,p);
+//	printf("   Next为: ");
+//	NextPrint(p,StrLength(s1));
+//	get_nextval(s1,p);
+//	printf("NextVal为: ");
+//	NextPrint(p,StrLength(s1));
+//	printf("\n");
+//
+//	StrAssign(s1,"aaaaaaaab");
+//	printf("   子串为: ");
+//	StrPrint(s1);
+//	i=StrLength(s1);
+//	p=(int*)malloc((i+1)*sizeof(int));
+//	get_next(s1,p);
+//	printf("   Next为: ");
+//	NextPrint(p,StrLength(s1));
+//	get_nextval(s1,p);
+//	printf("NextVal为: ");
+//	NextPrint(p,StrLength(s1));
+//
+//	printf("\n");
+//
+//	StrAssign(s1,"00000000000000000000000000000000000000000000000001");
+//	printf("主串为: ");
+//	StrPrint(s1);
+//	StrAssign(s2,"0000000001");
+//	printf("子串为: ");
+//	StrPrint(s2);
+//	printf("\n");
+//	printf("主串和子串在第%d个字符处首次匹配（朴素模式匹配算法）\n",Index(s1,s2,1));
+//	printf("主串和子串在第%d个字符处首次匹配（KMP算法） \n",Index_KMP(s1,s2,1));
+//	printf("主串和子串在第%d个字符处首次匹配（KMP改良算法） \n",Index_KMP1(s1,s2,1));
 
 	return 0;
 }

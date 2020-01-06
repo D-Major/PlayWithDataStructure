@@ -15,7 +15,7 @@
 typedef int Status;		/* Status是函数的类型,其值是函数结果状态代码，如OK等 */
 
 /* 用于构造二叉树********************************** */
-int index=1;
+int _index = 1;
 typedef char String[24]; /*  0号单元存放串的长度 */
 String str;
 
@@ -78,7 +78,7 @@ void CreateBiTree(BiTree *T)
 	TElemType ch;
 	
 	/* scanf("%c",&ch); */
-	ch=str[index++];
+	ch=str[_index++];
 
 	if(ch=='#') 
 		*T=NULL;
