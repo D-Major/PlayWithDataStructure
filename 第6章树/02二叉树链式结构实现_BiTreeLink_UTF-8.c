@@ -10,25 +10,24 @@
 #define TRUE 1
 #define FALSE 0
 
-#define MAXSIZE 100 /* 存储空间初始分配量 */
+#define MAXSIZE 100 /* 字符串存储空间初始分配量 */
 
 typedef int Status;		/* Status是函数的类型,其值是函数结果状态代码，如OK等 */
 
-/* 用于构造二叉树********************************** */
-int _index = 1;
-typedef char String[24]; /*  0号单元存放串的长度 */
-String str;
+/* 创建字符串用于构造二叉树********************************** */
+typedef char String[22]; /*  0号单元存放串的长度 */
+String str;     // 这里声明成全局变量方便调用
 
-Status StrAssign(String T,char *chars)
+Status StrAssign(String T,char *chars)  // 这里*chars指输入字符串首位的指针
 { 
 	int i;
 	if(strlen(chars)>MAXSIZE)
 		return ERROR;
 	else
 	{
-		T[0]=strlen(chars);
+		T[0]=(char)strlen(chars);
 		for(i=1;i<=T[0];i++)
-			T[i]=*(chars+i-1);
+			T[i] = *(chars+i-1);    // 这里i必须从1开始, 0处是字符串长度
 		return OK;
 	}
 }
@@ -36,12 +35,6 @@ Status StrAssign(String T,char *chars)
 
 typedef char TElemType;
 TElemType Nil=' '; /* 字符型以空格符为空 */
-
-Status visit(TElemType e)
-{
-	printf("%c ",e);
-	return OK;
-}
 
 typedef struct BiTNode  /* 结点结构 */
 {
@@ -66,25 +59,26 @@ void DestroyBiTree(BiTree *T)
 			DestroyBiTree(&(*T)->lchild); /* 销毁左孩子子树 */
 		if((*T)->rchild) /* 有右孩子 */
 			DestroyBiTree(&(*T)->rchild); /* 销毁右孩子子树 */
-		free(*T); /* 释放根结点 */
-		*T=NULL; /* 空指针赋0 */
+		free(*T); /* 释放根结点, 其实是一直递归到叶子节点再释放 */
+		*T=NULL; /* 空指针赋0, 否则会成为野指针指向随机地址 */
 	}
 }
 
 /* 按前序输入二叉树中结点的值（一个字符） */
 /* #表示空树，构造二叉链表表示二叉树T。 */
+int _index = 1;
 void CreateBiTree(BiTree *T)
-{ 
+{
 	TElemType ch;
-	
+
 	/* scanf("%c",&ch); */
 	ch=str[_index++];
 
-	if(ch=='#') 
+	if(ch == '#')     // 对空的节点就将其当做根节点为空的子树, 这样方便遍历扩展二叉树
 		*T=NULL;
 	else
 	{
-		*T=(BiTree)malloc(sizeof(BiTNode));
+		*T=(BiTree)malloc(sizeof(BiTNode));     // BiTree类型的空间
 		if(!*T)
 			exit(OVERFLOW);
 		(*T)->data=ch; /* 生成根结点 */
@@ -103,12 +97,10 @@ Status BiTreeEmpty(BiTree T)
 		return TRUE;
 }
 
-#define ClearBiTree DestroyBiTree
-
 /* 初始条件: 二叉树T存在。操作结果: 返回T的深度 */
 int BiTreeDepth(BiTree T)
 {
-	int i,j;
+	int i, j;
 	if(!T)
 		return 0;
 	if(T->lchild)
@@ -118,8 +110,8 @@ int BiTreeDepth(BiTree T)
 	if(T->rchild)
 		j=BiTreeDepth(T->rchild);
 	else
-		j=0;
-	return i>j?i+1:j+1;
+		j=0;    // 叶子节点的i,j都为0, 返回深度为1.
+    return i>j ? i+1 : j+1;     // 比较左右子树深度的大小, 返回更深的那个
 }
 
 /* 初始条件: 二叉树T存在。操作结果: 返回T的根 */
@@ -185,8 +177,7 @@ int main()
 	TElemType e1;
 	InitBiTree(&T);
 
-	
-	StrAssign(str,"ABDH#K###E##CFI###G#J##");
+	StrAssign(str,"ABDH##I##EJ###CF##G##");     // 先序遍历
 
 	CreateBiTree(&T);
 
@@ -200,7 +191,7 @@ int main()
 	InOrderTraverse(T);
 	printf("\n后序遍历二叉树:");
 	PostOrderTraverse(T);
-	ClearBiTree(&T);
+	DestroyBiTree(&T);
 	printf("\n清除二叉树后,树空否？%d(1:是 0:否) 树的深度=%d\n",BiTreeEmpty(T),BiTreeDepth(T));
 	i=Root(T);
 	if(!i)
