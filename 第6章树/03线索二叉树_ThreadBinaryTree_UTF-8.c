@@ -14,14 +14,17 @@
 
 typedef int Status;	/* Status是函数的类型,其值是函数结果状态代码,如OK等 */
 typedef char TElemType;
-typedef enum {Link,Thread} PointerTag;	/* Link==0表示指向左右孩子指针, */
+/* 第一个枚举成员的默认值为整型的0, 后续枚举成员的值在前一个成员上加1
+ *  enum可以通过枚举名(可选)加点访问枚举的元素. 例:int i = (int)ASN.MON;
+ *  枚举值虽然是int类型的, 但是也必须进行显式的强制转换 */
+typedef enum Tag{Link,Thread} PointerTag;	/* Link==0表示指向左右孩子指针, */
 										/* Thread==1表示指向前驱或后继的线索 */
-typedef  struct BiThrNode	/* 二叉线索存储结点结构 */
+typedef struct BiThrNode	/* 二叉线索存储结点结构 */
 {
 	TElemType data;	/* 结点数据 */
 	struct BiThrNode *lchild, *rchild;	/* 左右孩子指针 */
-	PointerTag LTag;
-	PointerTag RTag;		/* 左右标志 */
+	PointerTag LTag;		/* 左右标志 */
+	PointerTag RTag;
 } BiThrNode, *BiThrTree;
 
 TElemType Nil='#'; /* 字符型以空格符为空 */
@@ -58,7 +61,7 @@ Status CreateBiThrTree(BiThrTree *T)
 }
 
 BiThrTree pre; /* 全局变量,始终指向刚刚访问过的结点 */
-/* 中序遍历进行中序线索化 */
+/* 中序遍历进行中序线索化, 除中间修改空指针部分都和普通的中序遍历一样 */
 void InThreading(BiThrTree p)
 { 
 	if(p)

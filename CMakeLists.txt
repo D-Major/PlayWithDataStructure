@@ -20,8 +20,8 @@ add_executable(PlayWithDataStructureSourceCode_UTF_8
 #        第5章串/01串_String_UTF-8.c
 #        第5章串/02模式匹配_KMP_UTF-8.c
 #        第6章树/01二叉树顺序结构实现_BiTreeArray_UTF-8.c
-        第6章树/02二叉树链式结构实现_BiTreeLink_UTF-8.c
-#        第6章树/03线索二叉树_ThreadBinaryTree_UTF-8.c
+#        第6章树/02二叉树链式结构实现_BiTreeLink_UTF-8.c
+        第6章树/03线索二叉树_ThreadBinaryTree_UTF-8.c
 #        第7章图/01邻接矩阵创建_CreateMGraph_UTF-8.c
 #        第7章图/02邻接表创建_CreateALGraph_UTF-8.c
 #        第7章图/03邻接矩阵深度和广度遍历DFS_BFS_UTF-8.c
